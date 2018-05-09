@@ -11,6 +11,4 @@ void UTankTurret::Rotate(float RelativeSpeed)
 	auto Rotation = RelativeRotation.Yaw + RotationChange;
 
 	SetRelativeRotation(FRotator(0, Rotation, 0));
-
-	UE_LOG(LogTemp, Warning, TEXT("UTankTurret::Rotate"));
 }
