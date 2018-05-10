@@ -50,9 +50,12 @@ void ATank::SetTurretReference(UTankTurret* TurretToSet)
 
 void ATank::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Tank fire!"));
-
 	if (!Barrel) { return; }
+
+	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
+	if (!isReloaded) { return; }
+
+	UE_LOG(LogTemp, Warning, TEXT("Tank fire!"));
 
 	// Spawn projectile at barrel socket location
 	auto Projectile = GetWorld()->SpawnActor<AProjectile>(
@@ -62,4 +65,5 @@ void ATank::Fire()
 	);
 
 	Projectile->LaunchProjectile(LaunchSpeed);
+	LastFireTime = FPlatformTime::Seconds();
 }
