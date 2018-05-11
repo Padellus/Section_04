@@ -16,12 +16,23 @@ void UTankMovementComponent::Intialize(UTankTrack* LeftTrackToSet, UTankTrack* R
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
-	UE_LOG(LogTemp, Warning, TEXT("IntendMoveForward Throw: %f"), Throw);
 	if (LeftTrack) {
 		LeftTrack->SetThrottle(Throw);
 	}
 	if (RightTrack) {
 		RightTrack->SetThrottle(Throw);
+	}
+	// TODO prevent double speed
+}
+
+void UTankMovementComponent::IntendTurnRight(float Throw)
+{
+	UE_LOG(LogTemp, Warning, TEXT("IntendTurnRight Throw: %f"), Throw);
+	if (LeftTrack) {
+		LeftTrack->SetThrottle(Throw);
+	}
+	if (RightTrack) {
+		RightTrack->SetThrottle(-Throw);
 	}
 	// TODO prevent double speed
 }
