@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Phillip Patti.
 
 #include "Public/TankMovementComponent.h"
 #include "Public/TankTrack.h"
@@ -16,35 +16,23 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 	IntendTurnRight(RightThrow);
 }
 
-void UTankMovementComponent::Intialize(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet)
+void UTankMovementComponent::Initialize(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet)
 {
-	if (LeftTrackToSet) {
-		LeftTrack = LeftTrackToSet;
-	}
-	if (RightTrackToSet) {
-		RightTrack = RightTrackToSet;
-	}
+	LeftTrack = LeftTrackToSet;
+	RightTrack = RightTrackToSet;
 }
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
-	if (LeftTrack) {
-		LeftTrack->SetThrottle(Throw);
-	}
-	if (RightTrack) {
-		RightTrack->SetThrottle(Throw);
-	}
-	// TODO prevent double speed
+	if (!ensure(LeftTrack && RightTrack)) { return; }
+	LeftTrack->SetThrottle(Throw);
+	RightTrack->SetThrottle(Throw);
 }
 
 void UTankMovementComponent::IntendTurnRight(float Throw)
 {
-	if (LeftTrack) {
-		LeftTrack->SetThrottle(Throw);
-	}
-	if (RightTrack) {
-		RightTrack->SetThrottle(-Throw);
-	}
-	// TODO prevent double speed
+	if (!ensure(LeftTrack && RightTrack)) { return; }
+	LeftTrack->SetThrottle(Throw);
+	RightTrack->SetThrottle(-Throw);
 }
 

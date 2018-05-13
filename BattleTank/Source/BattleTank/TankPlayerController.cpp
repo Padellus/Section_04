@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Phillip Patti.
 
 #include "TankPlayerController.h"
 #include "Public/Tank.h"
+#include "Public/TankAimingComponent.h"
 #include "Engine/World.h"
 
 void ATankPlayerController::BeginPlay()
@@ -10,10 +11,18 @@ void ATankPlayerController::BeginPlay()
 
 	ATank* ControlledTank = GetControlledTank();
 	if (!ControlledTank) {
-		UE_LOG(LogTemp, Warning, TEXT("PlayerController has NO ControlledTank!!!"))
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController has NO ControlledTank!!!: %s"), *(ControlledTank->GetName()))
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("PlayerController has ControlledTank: %s"), *(ControlledTank->GetName()))
+	}
+
+	auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
+	if (AimingComponent) {
+		FoundAimingComponent(AimingComponent);
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController has NO TankAimingComponent!!!: %s"), *(ControlledTank->GetName()))
 	}
 }
 
@@ -30,7 +39,7 @@ ATank* ATankPlayerController::GetControlledTank() const
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!GetControlledTank()) {
+	if (!ensure(GetControlledTank())) {
 		return;
 	}
 	FVector HitLocation; // Out parameter

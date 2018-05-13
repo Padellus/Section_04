@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Phillip Patti.
 
 #pragma once
 
@@ -25,7 +25,7 @@ public:
 	void IntendTurnRight(float Throw);
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void Intialize(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet);
+	void Initialize(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet);
 	
 private:
 	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
