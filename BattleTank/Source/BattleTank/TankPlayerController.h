@@ -21,6 +21,10 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	UFUNCTION(BLueprintCallable, Category = "Setup")
+	ATank* GetControlledTank() const;
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	float CrosshairXLocation = 0.5;
@@ -30,8 +34,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	float LineTraceRange = 1000000.0;
-
-	ATank* GetControlledTank() const;
 
 	void AimTowardsCrosshair();
 
