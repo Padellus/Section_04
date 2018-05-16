@@ -42,7 +42,7 @@ protected:
 private:
 	virtual void BeginPlay() override;
 
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UTankBarrel* Barrel = nullptr;
 
@@ -57,9 +57,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float ReloadTimeInSeconds = 3;
 
-	void MoveBarrelTowards(FVector AimDirection);
+	void MoveBarrelTowards();
 
-	void MoveTurretTowards(FVector AimDirection);
+	void MoveTurretTowards();
 
 	double LastFireTime = 0;
+
+	FVector AimDirection = FVector(0);
 };

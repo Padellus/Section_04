@@ -13,8 +13,6 @@ UTankAimingComponent::UTankAimingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
@@ -25,14 +23,24 @@ void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* Tur
 
 void UTankAimingComponent::BeginPlay()
 {
-	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("UTankAimingComponent BeginPlay"));
 	LastFireTime = FPlatformTime::Seconds();
 }
 
-void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-	if ((FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds) {
+	UE_LOG(LogTemp, Warning, TEXT("UTankAimingComponent Tick"));
+	if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds) {
+		UE_LOG(LogTemp, Warning, TEXT("Reloading"));
 		FiringState = EFiringState::Reloading;
+	}
+	else if (!Barrel->GetForwardVector().Equals(AimDirection.ForwardVector, 0.01)) {
+		FiringState = EFiringState::Aiming;
+		UE_LOG(LogTemp, Warning, TEXT("Aiming"));
+	}
+	else {
+		FiringState = EFiringState::Locked;
+		UE_LOG(LogTemp, Warning, TEXT("Locked"));
 	}
 }
 
@@ -44,13 +52,13 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 	bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity(this, OutLaunchVelocity, StartLocation, HitLocation, LaunchSpeed, false, 0, 0, ESuggestProjVelocityTraceOption::DoNotTrace);
 	if (bHaveAimSolution) {
-		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
-		MoveBarrelTowards(AimDirection);
-		MoveTurretTowards(AimDirection);
+		AimDirection = OutLaunchVelocity.GetSafeNormal();
+		MoveBarrelTowards();
+		MoveTurretTowards();
 	}
 }
 
-void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
+void UTankAimingComponent::MoveBarrelTowards()
 {
 	// Work out difference between current barrel roation and aim direction
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
@@ -60,7 +68,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	Barrel->Elevate(DeltaRotator.Pitch);
 }
 
-void UTankAimingComponent::MoveTurretTowards(FVector AimDirection)
+void UTankAimingComponent::MoveTurretTowards()
 {
 	// Work out difference between current turret roation and aim direction
 	auto TurretRotator = Turret->GetForwardVector().Rotation();
