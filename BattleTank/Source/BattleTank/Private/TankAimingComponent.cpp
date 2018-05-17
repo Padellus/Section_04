@@ -23,24 +23,19 @@ void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* Tur
 
 void UTankAimingComponent::BeginPlay()
 {
-	UE_LOG(LogTemp, Warning, TEXT("UTankAimingComponent BeginPlay"));
 	LastFireTime = FPlatformTime::Seconds();
 }
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-	UE_LOG(LogTemp, Warning, TEXT("UTankAimingComponent Tick"));
 	if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds) {
-		UE_LOG(LogTemp, Warning, TEXT("Reloading"));
 		FiringState = EFiringState::Reloading;
 	}
-	else if (!Barrel->GetForwardVector().Equals(AimDirection.ForwardVector, 0.01)) {
+	else if (!Barrel->GetForwardVector().Equals(AimDirection, 0.01)) {
 		FiringState = EFiringState::Aiming;
-		UE_LOG(LogTemp, Warning, TEXT("Aiming"));
 	}
 	else {
 		FiringState = EFiringState::Locked;
-		UE_LOG(LogTemp, Warning, TEXT("Locked"));
 	}
 }
 
