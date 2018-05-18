@@ -24,5 +24,8 @@ void ATankAIController::Tick(float DeltaTime)
 	if (!ensure(AimingComponent)) { return; }
 
 	AimingComponent->AimAt(PlayerPawn->GetActorLocation());
-	AimingComponent->Fire();
+
+	if (AimingComponent->GetFiringState() == EFiringState::Locked) {
+		AimingComponent->Fire();
+	}
 }
