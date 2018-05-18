@@ -1,9 +1,9 @@
 // Copyright Phillip Patti.
 
-#include "Public/TankAimingComponent.h"
-#include "Public/TankBarrel.h"
-#include "Public/TankTurret.h"
-#include "Public/Projectile.h"
+#include "TankAimingComponent.h"
+#include "TankBarrel.h"
+#include "TankTurret.h"
+#include "Projectile.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 

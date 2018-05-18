@@ -1,7 +1,7 @@
 // Copyright Phillip Patti.
 
-#include "Public/TankAIController.h"
-#include "Public/TankAimingComponent.h"
+#include "TankAIController.h"
+#include "TankAimingComponent.h"
 #include "Engine/World.h"
 
 void ATankAIController::BeginPlay()

@@ -1,7 +1,7 @@
 // Copyright Phillip Patti.
 
 #include "TankPlayerController.h"
-#include "Public/TankAimingComponent.h"
+#include "TankAimingComponent.h"
 #include "Engine/World.h"
 
 void ATankPlayerController::BeginPlay()
