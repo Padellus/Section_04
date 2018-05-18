@@ -1,10 +1,11 @@
 // Copyright Phillip Patti.
 
 #include "Public/TankTrack.h"
+#include "Engine/World.h"
 
 UTankTrack::UTankTrack()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UTankTrack::BeginPlay()
@@ -12,12 +13,19 @@ void UTankTrack::BeginPlay()
 	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
 }
 
-void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	DriveTrack();
+	ApplySidewaysForce();
+	CurrentThrottle = 0;
+}
+
+void UTankTrack::ApplySidewaysForce()
+{
 	auto SlippageSpeed = FVector::DotProduct(GetComponentVelocity(), GetRightVector());
 
 	// Required acceleration for this frame in order to correct slippage
+	auto DeltaTime = GetWorld()->DeltaTimeSeconds;
 	auto CorrectionAcceleration = -SlippageSpeed / DeltaTime * GetRightVector();
 
 	// Calculate and apply sideways (F = m a)
@@ -26,15 +34,14 @@ void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActor
 	TankRoot->AddForce(CorrectionForce);
 }
 
-void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
-{
-	UE_LOG(LogTemp, Warning, TEXT("UTankTrack::OnHit!"));
-}
-
 void UTankTrack::SetThrottle(float Throttle)
 {
-	// TODO Clamp actual throttle
-	auto ForceApplied = GetForwardVector() * Throttle * MaxDrivingForce;
+	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle + Throttle, -1, 1);
+}
+
+void UTankTrack::DriveTrack()
+{
+	auto ForceApplied = GetForwardVector() * CurrentThrottle * MaxDrivingForce;
 	auto ForceLocation = GetComponentLocation();
 	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 
