@@ -36,16 +36,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firing")
 	void Fire();
 
-	int GetAmmo() const;
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	int32 GetAmmo() const;
 
 	EFiringState GetFiringState() const;
 	
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EFiringState FiringState = EFiringState::Reloading;
-
-	UPROPERTY(BlueprintReadOnly, Category = "State")
-	int Ammo = 3;
 
 private:
 	virtual void BeginPlay() override;
@@ -64,6 +62,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float ReloadTimeInSeconds = 3;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	int32 Ammo = 3;
 
 	void MoveBarrelTowards();
 

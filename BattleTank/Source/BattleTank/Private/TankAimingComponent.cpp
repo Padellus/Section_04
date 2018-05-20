@@ -103,7 +103,7 @@ void UTankAimingComponent::Fire()
 	Ammo = Ammo - 1;
 }
 
-int UTankAimingComponent::GetAmmo() const
+int32 UTankAimingComponent::GetAmmo() const
 {
 	return Ammo;
 }
